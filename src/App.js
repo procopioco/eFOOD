@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import PizzaList from './components/PizzaList';
 import PizzaModal from './components/PizzaModal';
+import AboutPage from './components/AboutPage';
 import pizzaImage from './pizza.png';
 import logoImage from './logo.png';
 import vectorImage from './Vector.png';
@@ -139,7 +140,9 @@ function HomePage() {
       <Header image={vectorImage}>
         <Container>
           <HeaderContent>
-            <HeaderLabel>Restaurante</HeaderLabel>
+            <Link to="/about" style={{ textDecoration: 'none' }}>
+              <HeaderLabel style={{ cursor: 'pointer' }}>Restaurante</HeaderLabel>
+            </Link>
             <LogoImage src={logoImage} alt="Efood" />
             <CartText onClick={openCart} style={{ cursor: 'pointer' }}>
               Carrinho ({totalItems})
@@ -291,6 +294,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<AboutPage />} />
       </Routes>
     </Router>
   );
