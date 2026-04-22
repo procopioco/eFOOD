@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PizzaList from './components/PizzaList';
 import PizzaModal from './components/PizzaModal';
 import pizzaImage from './pizza.png';
