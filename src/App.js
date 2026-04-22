@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import PizzaList from './components/PizzaList';
 import PizzaModal from './components/PizzaModal';
 import pizzaImage from './pizza.png';
@@ -67,8 +68,7 @@ const pizzas = [
   },
 ];
 
-function App() {
-  const [cartOpen, setCartOpen] = useState(false);
+function HomePage() {
   const [cartItems, setCartItems] = useState([]);
   const [selectedPizza, setSelectedPizza] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,6 +84,7 @@ function App() {
   const [cardCvv, setCardCvv] = useState('');
   const [cardMonth, setCardMonth] = useState('');
   const [cardYear, setCardYear] = useState('');
+  const [cartOpen, setCartOpen] = useState(false);
 
   const handleAddToCart = (pizza) => {
     setCartItems((prev) => {
@@ -285,4 +286,12 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </Router>
+  );
+}
