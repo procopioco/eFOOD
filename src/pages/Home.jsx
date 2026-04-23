@@ -1,63 +1,51 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import logo from '../logo.png';
+import vector from '../Vector.png';
 
 const PageWrapper = styled.div`
   background: #FDF0E8;
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(192,57,43,0.04) 24px, rgba(192,57,43,0.04) 25px),
-    repeating-linear-gradient(90deg, transparent, transparent 24px, rgba(192,57,43,0.04) 24px, rgba(192,57,43,0.04) 25px);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 `;
 
-const Navbar = styled.nav`
-  background: url('img/fundo.png');
-  background-size: 100% auto;
-  background-position: center;
-  background-attachment: fixed;
-  padding: 32px 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Logo = styled.div`
-  font-family: 'Playfair Display', serif;
-  font-size: 32px;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-
-  img {
-    height: 40px;
-    width: auto;
-  }
-`;
-
 const Hero = styled.section`
   text-align: center;
-  padding: 64px 40px 48px;
-  background: url('img/fundo.png');
-  background-size: 100% auto;
-  background-position: center;
-  background-attachment: fixed;
+  padding: 80px 40px 100px;
+  background-image: url(${props => props.bgImage || 'none'}), url(${props => props.bgImage || 'none'});
+  background-size: 100% auto, 100% auto;
+  background-repeat: repeat-y, repeat-y;
+  background-position: top center, top center;
+  background-attachment: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  img {
+    height: 50px;
+    width: auto;
+    margin-bottom: 100px;
+  }
 
   h1 {
     font-family: 'Playfair Display', serif;
     font-size: 42px;
-    color: #fff;
+    color: #C0392B;
     line-height: 1.2;
     max-width: 560px;
     margin: 0 auto;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
   }
 
-  @media (max-width: 600px) {
-    padding: 40px 20px 32px;
+  @media (max-width: 100%) {
+    padding: 50px 20px 60px;
     h1 {
       font-size: 28px;
     }
@@ -70,18 +58,18 @@ const CardsGrid = styled.div`
   gap: 28px;
   padding: 0 40px 60px;
   max-width: 900px;
-  margin: 0 auto;
+  margin: 60px auto 0;
   width: 100%;
 
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
     padding: 0 20px 40px;
+    margin: 40px auto 0;
   }
 `;
 
 const Card = styled.div`
-  background: #fff;
-  border-radius: 16px;
+  background: #FFF8F2;
   overflow: hidden;
   border: 1px solid rgba(0,0,0,0.07);
   cursor: pointer;
@@ -121,7 +109,6 @@ const Badge = styled.span`
   font-size: 11px;
   font-weight: 500;
   padding: 4px 10px;
-  border-radius: 20px;
   font-family: 'DM Sans', sans-serif;
 `;
 
@@ -158,7 +145,7 @@ const Star = styled.span`
 
 const CardDesc = styled.p`
   font-size: 13px;
-  color: #666;
+  color: #E66767;
   line-height: 1.55;
   margin-bottom: 14px;
 `;
@@ -170,7 +157,6 @@ const Button = styled.button`
   font-size: 13px;
   font-weight: 500;
   padding: 8px 18px;
-  border-radius: 8px;
   border: none;
   cursor: pointer;
   font-family: 'DM Sans', sans-serif;
@@ -182,7 +168,7 @@ const Button = styled.button`
 `;
 
 const Footer = styled.footer`
-  background: #FDF0E8;
+  background: #FFEBD9;
   border-top: 1px solid rgba(0,0,0,0.08);
   padding: 40px 40px 28px;
   text-align: center;
@@ -237,7 +223,7 @@ const SocialIcon = styled.span`
 
 const FooterDisclaimer = styled.p`
   font-size: 11.5px;
-  color: #999;
+  color: #E66767;
   max-width: 480px;
   margin: 0 auto;
   line-height: 1.5;
@@ -306,13 +292,8 @@ function Home() {
 
   return (
     <PageWrapper>
-      <Navbar>
-        <Logo>
-          <img src="img/logo.png" alt="efood" />
-        </Logo>
-      </Navbar>
-
-      <Hero>
+      <Hero bgImage={vector}>
+        <img src={logo} alt="efood" />
         <h1>Viva experiências gastronômicas no conforto da sua casa</h1>
       </Hero>
 
@@ -348,7 +329,7 @@ function Home() {
 
       <Footer>
         <FooterLogo>
-          <img src="img/logo.png" alt="efood" />
+          <img src={logo} alt="efood" />
         </FooterLogo>
         <Social>
           <SocialBtn href="#">

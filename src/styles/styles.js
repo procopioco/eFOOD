@@ -85,7 +85,7 @@ export const HeaderLabel = styled.span`
 `
 
 export const LogoImage = styled.img`
-  width: 150px;
+  width: 70px;
   height: auto;
   position: absolute;
   left: 50%;
@@ -151,7 +151,6 @@ export const CartItemImage = styled.img`
   width: 72px;
   height: 72px;
   object-fit: cover;
-  border-radius: 12px;
 `
 
 export const CartItemInfo = styled.div`
@@ -205,7 +204,6 @@ export const FormInput = styled.input`
   width: 100%;
   padding: 12px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 10px;
   font-size: 14px;
 `
 
@@ -222,7 +220,6 @@ export const BackButton = styled.button`
   color: ${colors.white};
   border: none;
   padding: 14px;
-  border-radius: 12px;
   cursor: pointer;
   font-weight: bold;
 `
@@ -233,7 +230,6 @@ export const CartButton = styled.button`
   color: ${colors.white};
   border: none;
   padding: 14px;
-  border-radius: 12px;
   cursor: pointer;
   font-weight: bold;
 `
@@ -283,7 +279,6 @@ export const Grid = styled.div`
 export const Card = styled.div`
   background-color: ${colors.primary};
   padding: 16px;
-  border-radius: 16px;
   color: ${colors.white};
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -297,7 +292,6 @@ export const Card = styled.div`
 
 export const CardImage = styled.img`
   width: 100%;
-  border-radius: 12px;
   object-fit: cover;
 `
 
@@ -319,7 +313,6 @@ export const Button = styled.button`
   margin-top: 16px;
   cursor: pointer;
   font-weight: bold;
-  border-radius: 10px;
 `
 
 export const Overlay = styled.div`
@@ -343,7 +336,6 @@ export const Modal = styled.div`
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
-  border-radius: 20px;
 `
 
 export const Close = styled.span`
@@ -357,7 +349,6 @@ export const Close = styled.span`
 export const ModalImage = styled.img`
   width: 100%;
   max-width: 280px;
-  border-radius: 16px;
   object-fit: cover;
 `
 
