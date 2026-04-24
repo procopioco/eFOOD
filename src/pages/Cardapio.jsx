@@ -5,6 +5,7 @@ import PizzaList from '../components/PizzaList';
 import PizzaModal from '../components/PizzaModal';
 import CartSidebar from '../components/CartSidebar';
 import CheckoutModal from '../components/CheckoutModal';
+import OrderConfirmation from '../components/OrderConfirmation';
 import pizzaImage from '../pizza.png';
 import logoImage from '../logo.png';
 import vectorImage from '../Vector.png';
@@ -61,6 +62,8 @@ function Cardapio() {
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [, setDeliveryData] = useState(null);
+  const [orderSuccessOpen, setOrderSuccessOpen] = useState(false);
+  const [completedOrder, setCompletedOrder] = useState(null);
 
   const handleAddToCart = (pizza) => {
     setCartItems((prev) => {
@@ -84,11 +87,24 @@ function Cardapio() {
     setCheckoutOpen(true);
   };
 
-  const handleContinueCheckout = (formData) => {
-    setDeliveryData(formData);
+  const handleCompletePurchase = ({ delivery }) => {
+    setDeliveryData(delivery);
+    const total = cartItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+    setCompletedOrder({
+      total,
+      address: {
+        street: delivery.address,
+        number: delivery.number,
+        city: delivery.city,
+        zipCode: delivery.cep,
+      },
+    });
+    setCartItems([]);
     setCheckoutOpen(false);
-    alert(`Endereço salvo: ${formData.address}, ${formData.number} - ${formData.city}`);
-    // TODO: Implementar próxima etapa (pagamento)
+    setOrderSuccessOpen(true);
   };
 
   const openCart = () => setCartOpen(true);
@@ -157,9 +173,21 @@ function Cardapio() {
 
       <CheckoutModal
         isOpen={checkoutOpen}
-        totalPrice={cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)}
+        totalPrice={cartItems.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        )}
         onClose={() => setCheckoutOpen(false)}
-        onContinue={handleContinueCheckout}
+        onCompletePurchase={handleCompletePurchase}
+      />
+
+      <OrderConfirmation
+        isOpen={orderSuccessOpen}
+        onClose={() => {
+          setOrderSuccessOpen(false);
+          setCompletedOrder(null);
+        }}
+        orderData={completedOrder}
       />
 
       <Footer>

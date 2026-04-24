@@ -6,11 +6,7 @@ const ModalOverlay = styled.div`
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 30;
-
-  @media (min-width: 1024px) {
-    display: none;
-  }
+  z-index: 70;
 `;
 
 const ModalContainer = styled.aside`
@@ -22,7 +18,7 @@ const ModalContainer = styled.aside`
   max-width: 320px;
   background: #E66767;
   box-shadow: -2px 0 12px rgba(0, 0, 0, 0.15);
-  z-index: 40;
+  z-index: 80;
   display: flex;
   flex-direction: column;
   transform: translateX(${props => (props.$isOpen ? '0' : '100%')});
