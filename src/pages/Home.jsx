@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from '../logo.png';
 import vector from '../Vector.png';
+import macarrao from '../macarrao.png';
 
 const PageWrapper = styled.div`
   background: #FDF0E8;
@@ -86,13 +87,10 @@ const CardImg = styled.div`
   overflow: hidden;
 `;
 
-const CardImgPlaceholder = styled.div`
+const CardImgPlaceholder = styled.img`
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 64px;
+  object-fit: cover;
 `;
 
 const Badges = styled.div`
@@ -301,9 +299,7 @@ function Home() {
         {restaurants.map((restaurant) => (
           <Card key={restaurant.id}>
             <CardImg>
-              <CardImgPlaceholder style={{ background: restaurant.gradient }}>
-                {restaurant.emoji}
-              </CardImgPlaceholder>
+              <CardImgPlaceholder src={macarrao} alt={restaurant.name} />
               <Badges>
                 {restaurant.badge && (
                   <Badge alt>{restaurant.badge}</Badge>

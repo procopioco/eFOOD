@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useCartStorage } from '../hooks/useCartStorage';
 import PizzaList from '../components/PizzaList';
 import PizzaModal from '../components/PizzaModal';
+import CartSidebar from '../components/CartSidebar';
+import CheckoutModal from '../components/CheckoutModal';
 import pizzaImage from '../pizza.png';
 import logoImage from '../logo.png';
 import vectorImage from '../Vector.png';
@@ -17,35 +20,13 @@ import {
   Banner,
   BannerText,
   Category,
-  Title,
   Footer,
-  FooterText,
   FooterLogo,
   Social,
   SocialBtn,
   SocialIcon,
   FooterDisclaimer,
   GlobalStyle,
-  CartOverlay,
-  CartDrawer,
-  CartHeader,
-  CartItems,
-  CartItem,
-  CartItemImage,
-  CartItemInfo,
-  CartItemName,
-  CartItemPrice,
-  CartDivider,
-  CartTotal,
-  CartButton,
-  CloseCart,
-  CheckoutTitle,
-  FormField,
-  FormLabel,
-  FormInput,
-  FormActions,
-  BackButton,
-  SuccessMessage
 } from '../styles/styles';
 
 // Dados de exemplo para pizzas
@@ -74,22 +55,12 @@ const pizzas = [
 ];
 
 function Cardapio() {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useCartStorage();
   const [selectedPizza, setSelectedPizza] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [checkoutStep, setCheckoutStep] = useState(1);
-  const [address, setAddress] = useState('');
-  const [number, setNumber] = useState('');
-  const [complement, setComplement] = useState('');
-  const [city, setCity] = useState('');
-  const [cep, setCep] = useState('');
-  const [cardName, setCardName] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardCvv, setCardCvv] = useState('');
-  const [cardMonth, setCardMonth] = useState('');
-  const [cardYear, setCardYear] = useState('');
   const [cartOpen, setCartOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [, setDeliveryData] = useState(null);
 
   const handleAddToCart = (pizza) => {
     setCartItems((prev) => {
@@ -105,23 +76,23 @@ function Cardapio() {
     });
   };
 
-  const openCart = () => {
-    setCartOpen(true);
-    setCheckoutOpen(false);
-    setCheckoutStep(1);
+  const handleRemoveFromCart = (pizzaId) => {
+    setCartItems((prev) => prev.filter((item) => item.id !== pizzaId));
   };
-  const closeCart = () => setCartOpen(false);
-  const openCheckout = () => {
+
+  const handleCheckout = () => {
     setCheckoutOpen(true);
-    setCheckoutStep(1);
   };
-  const backToCart = () => {
+
+  const handleContinueCheckout = (formData) => {
+    setDeliveryData(formData);
     setCheckoutOpen(false);
-    setCheckoutStep(1);
+    alert(`Endereço salvo: ${formData.address}, ${formData.number} - ${formData.city}`);
+    // TODO: Implementar próxima etapa (pagamento)
   };
-  const openPayment = () => setCheckoutStep(2);
-  const backToAddress = () => setCheckoutStep(1);
-  const handleFinalizePayment = () => setCheckoutStep(3);
+
+  const openCart = () => setCartOpen(true);
+  const closeCart = () => setCartOpen(false);
 
   const handlePizzaClick = (pizza) => {
     setSelectedPizza(pizza);
@@ -134,9 +105,6 @@ function Cardapio() {
   };
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cartItems
-    .reduce((sum, item) => sum + item.quantity * item.price, 0)
-    .toFixed(2);
 
   return (
     <PageWrapper>
@@ -159,7 +127,6 @@ function Cardapio() {
           <Container>
             <BannerText>
               <Category>Italiana</Category>
-              <Title>La Dolce Vita Trattoria</Title>
             </BannerText>
           </Container>
         </Banner>
@@ -172,109 +139,13 @@ function Cardapio() {
         </Container>
       </Main>
 
-      {cartOpen && (
-        <CartOverlay onClick={closeCart}>
-          <CartDrawer onClick={(e) => e.stopPropagation()}>
-            <CartHeader>
-              <div>
-                {!checkoutOpen ? 'Carrinho' :
-                 checkoutStep === 1 ? 'Endereço de entrega' :
-                 checkoutStep === 2 ? 'Dados do cartão' :
-                 'Pedido realizado'}
-              </div>
-              <CloseCart onClick={closeCart}>&times;</CloseCart>
-            </CartHeader>
-
-            {checkoutOpen ? (
-              checkoutStep === 1 ? (
-                <>
-                  <CheckoutTitle>Insira os dados da entrega</CheckoutTitle>
-                  <FormField>
-                    <FormLabel>Endereço</FormLabel>
-                    <FormInput value={address} onChange={(e) => setAddress(e.target.value)} />
-                  </FormField>
-                  <FormField>
-                    <FormLabel>Número</FormLabel>
-                    <FormInput value={number} onChange={(e) => setNumber(e.target.value)} />
-                  </FormField>
-                  <FormField>
-                    <FormLabel>Complemento</FormLabel>
-                    <FormInput value={complement} onChange={(e) => setComplement(e.target.value)} />
-                  </FormField>
-                  <FormField>
-                    <FormLabel>Cidade</FormLabel>
-                    <FormInput value={city} onChange={(e) => setCity(e.target.value)} />
-                  </FormField>
-                  <FormField>
-                    <FormLabel>CEP</FormLabel>
-                    <FormInput value={cep} onChange={(e) => setCep(e.target.value)} />
-                  </FormField>
-                  <FormActions>
-                    <BackButton onClick={backToCart}>Voltar ao carrinho</BackButton>
-                    <CartButton onClick={openPayment}>Continuar pagamento</CartButton>
-                  </FormActions>
-                </>
-              ) : checkoutStep === 2 ? (
-                <>
-                  <CheckoutTitle>Dados do cartão</CheckoutTitle>
-                  <FormField>
-                    <FormLabel>Nome do cartão</FormLabel>
-                    <FormInput value={cardName} onChange={(e) => setCardName(e.target.value)} />
-                  </FormField>
-                  <FormField>
-                    <FormLabel>Número do cartão</FormLabel>
-                    <FormInput value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} />
-                  </FormField>
-                  <FormField>
-                    <FormLabel>CVV</FormLabel>
-                    <FormInput value={cardCvv} onChange={(e) => setCardCvv(e.target.value)} />
-                  </FormField>
-                  <FormField>
-                    <FormLabel>Mês de vencimento</FormLabel>
-                    <FormInput value={cardMonth} onChange={(e) => setCardMonth(e.target.value)} />
-                  </FormField>
-                  <FormField>
-                    <FormLabel>Ano de vencimento</FormLabel>
-                    <FormInput value={cardYear} onChange={(e) => setCardYear(e.target.value)} />
-                  </FormField>
-                  <FormActions>
-                    <BackButton onClick={backToAddress}>Voltar para edição de endereço</BackButton>
-                    <CartButton onClick={handleFinalizePayment}>Finalizar pagamento</CartButton>
-                  </FormActions>
-                </>
-              ) : (
-                <SuccessMessage>Pedido realizado com sucesso!</SuccessMessage>
-              )
-            ) : (
-              <>
-                <CartItems>
-                  {cartItems.length === 0 ? (
-                    <p>O carrinho está vazio.</p>
-                  ) : (
-                    cartItems.map((item) => (
-                      <CartItem key={item.id}>
-                        <CartItemImage src={item.image} alt={item.name} />
-                        <CartItemInfo>
-                          <CartItemName>{item.name}</CartItemName>
-                          <CartItemPrice>
-                            {item.quantity} x R$ {item.price.toFixed(2)}
-                          </CartItemPrice>
-                        </CartItemInfo>
-                      </CartItem>
-                    ))
-                  )}
-                </CartItems>
-                <CartDivider />
-                <CartTotal>
-                  <span>Valor total</span>
-                  <strong>R$ {totalPrice}</strong>
-                </CartTotal>
-                <CartButton onClick={openCheckout}>Continuar com a entrega</CartButton>
-              </>
-            )}
-          </CartDrawer>
-        </CartOverlay>
-      )}
+      <CartSidebar
+        items={cartItems}
+        onRemoveItem={handleRemoveFromCart}
+        onCheckout={handleCheckout}
+        isOpen={cartOpen}
+        onClose={closeCart}
+      />
 
       {isModalOpen && selectedPizza && (
         <PizzaModal
@@ -283,6 +154,13 @@ function Cardapio() {
           onAddToCart={handleAddToCart}
         />
       )}
+
+      <CheckoutModal
+        isOpen={checkoutOpen}
+        totalPrice={cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)}
+        onClose={() => setCheckoutOpen(false)}
+        onContinue={handleContinueCheckout}
+      />
 
       <Footer>
         <FooterLogo>

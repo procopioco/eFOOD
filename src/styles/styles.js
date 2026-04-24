@@ -254,19 +254,24 @@ export const Banner = styled.div`
 
 export const BannerText = styled.div`
   position: absolute;
-  bottom: 32px;
+  top: 32px;
   left: 16px;
   color: white;
   z-index: 1;
-`
+`;
 
 export const Category = styled.p`
   font-size: 18px;
+  margin: 0;
 `
 
 export const Title = styled.h2`
   font-size: 28px;
   font-weight: bold;
+  position: absolute;
+  bottom: 32px;
+  left: 16px;
+  margin: 0;
 `
 
 export const Grid = styled.div`
