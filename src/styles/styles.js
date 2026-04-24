@@ -387,3 +387,57 @@ export const SuccessMessage = styled.div`
   font-size: 18px;
   font-weight: bold;
 `
+
+export const FooterLogo = styled.div`
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: #C0392B;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  img {
+    height: 30px;
+    width: auto;
+  }
+`
+
+export const Social = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+`
+
+export const SocialBtn = styled.a`
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #C0392B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none;
+
+  &:hover {
+    background: #a93226;
+  }
+`
+
+export const SocialIcon = styled.span`
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+`
+
+export const FooterDisclaimer = styled.p`
+  font-size: 11.5px;
+  color: #E66767;
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.5;
+`

@@ -69,7 +69,7 @@ const CardsGrid = styled.div`
 `;
 
 const Card = styled.div`
-  background: #FFF8F2;
+  background: #FFFFFF;
   overflow: hidden;
   border: 1px solid rgba(0,0,0,0.07);
   cursor: pointer;

@@ -20,6 +20,11 @@ import {
   Title,
   Footer,
   FooterText,
+  FooterLogo,
+  Social,
+  SocialBtn,
+  SocialIcon,
+  FooterDisclaimer,
   GlobalStyle,
   CartOverlay,
   CartDrawer,
@@ -271,12 +276,6 @@ function Cardapio() {
         </CartOverlay>
       )}
 
-      <Footer>
-        <Container>
-          <FooterText>© 2023 Efood. Todos os direitos reservados.</FooterText>
-        </Container>
-      </Footer>
-
       {isModalOpen && selectedPizza && (
         <PizzaModal
           pizza={selectedPizza}
@@ -284,6 +283,26 @@ function Cardapio() {
           onAddToCart={handleAddToCart}
         />
       )}
+
+      <Footer>
+        <FooterLogo>
+          <img src={logoImage} alt="efood" />
+        </FooterLogo>
+        <Social>
+          <SocialBtn href="#">
+            <SocialIcon>ig</SocialIcon>
+          </SocialBtn>
+          <SocialBtn href="#">
+            <SocialIcon>f</SocialIcon>
+          </SocialBtn>
+          <SocialBtn href="#">
+            <SocialIcon>tw</SocialIcon>
+          </SocialBtn>
+        </Social>
+        <FooterDisclaimer>
+          A efood é uma plataforma para divulgação de estabelecimentos. A responsabilidade pela entrega, qualidade dos produtos é toda do estabelecimento contratado.
+        </FooterDisclaimer>
+      </Footer>
     </PageWrapper>
   );
 }
