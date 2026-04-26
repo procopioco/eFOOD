@@ -15,7 +15,7 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     background: ${colors.background};
     color: ${colors.text};
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Roboto', sans-serif;
   }
 `
 
@@ -254,23 +254,25 @@ export const Banner = styled.div`
 
 export const BannerText = styled.div`
   position: absolute;
-  top: 32px;
-  left: 16px;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 16px;
   color: white;
   z-index: 1;
 `;
 
 export const Category = styled.p`
   font-size: 18px;
+  font-family: 'Roboto', sans-serif;
   margin: 0;
 `
 
 export const Title = styled.h2`
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
-  position: absolute;
-  bottom: 32px;
-  left: 16px;
+  font-family: 'Roboto', sans-serif;
   margin: 0;
 `
 
@@ -302,6 +304,8 @@ export const CardImage = styled.img`
 
 export const CardTitle = styled.h3`
   margin: 16px 0 8px;
+  font-size: 16px;
+  font-weight: bold;
 `
 
 export const CardDesc = styled.p`

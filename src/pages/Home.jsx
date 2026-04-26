@@ -10,6 +10,7 @@ const PageWrapper = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: 'Roboto', sans-serif;
 `;
 
 const Hero = styled.section`
@@ -37,8 +38,8 @@ const Hero = styled.section`
   }
 
   h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 42px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 36px;
     color: #C0392B;
     line-height: 1.2;
     max-width: 560px;
@@ -107,7 +108,7 @@ const Badge = styled.span`
   font-size: 11px;
   font-weight: 500;
   padding: 4px 10px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
 `;
 
 const CardBody = styled.div`
@@ -157,7 +158,7 @@ const Button = styled.button`
   padding: 8px 18px;
   border: none;
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   transition: background 0.2s;
 
   &:hover {
