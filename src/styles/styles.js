@@ -241,6 +241,12 @@ export const Banner = styled.div`
   background-position: center;
   position: relative;
 
+  > div {
+    height: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
   &::after {
     content: '';
     position: absolute;
@@ -253,24 +259,27 @@ export const Banner = styled.div`
 `
 
 export const BannerText = styled.div`
-  position: absolute;
-  inset: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 32px 16px;
+  align-items: flex-start;
+  height: 100%;
+  padding: 32px 0 22px;
   color: white;
   z-index: 1;
 `;
 
 export const Category = styled.p`
-  font-size: 18px;
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 300;
   font-family: 'Roboto', sans-serif;
   margin: 0;
 `
 
 export const Title = styled.h2`
   font-size: 32px;
+  line-height: 1.2;
   font-weight: bold;
   font-family: 'Roboto', sans-serif;
   margin: 0;

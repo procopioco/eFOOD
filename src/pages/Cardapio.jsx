@@ -21,6 +21,7 @@ import {
   Banner,
   BannerText,
   Category,
+  Title,
   Footer,
   FooterLogo,
   Social,
@@ -143,6 +144,7 @@ function Cardapio() {
           <Container>
             <BannerText>
               <Category>Italiana</Category>
+              <Title>La Dolce Vita Trattoria</Title>
             </BannerText>
           </Container>
         </Banner>
