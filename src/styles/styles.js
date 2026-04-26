@@ -272,7 +272,7 @@ export const BannerText = styled.div`
 export const Category = styled.p`
   font-size: 32px;
   line-height: 1.2;
-  font-weight: 300;
+  font-weight: 100;
   font-family: 'Roboto', sans-serif;
   margin: 0;
 `
