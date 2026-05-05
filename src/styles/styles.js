@@ -85,7 +85,8 @@ export const HeaderLabel = styled.span`
 `
 
 export const LogoImage = styled.img`
-  width: 70px;
+  width: 125px;
+  height: 57.5px;
   height: auto;
   position: absolute;
   left: 50%;
@@ -409,7 +410,7 @@ export const SuccessMessage = styled.div`
 export const FooterLogo = styled.div`
   font-family: 'Playfair Display', serif;
   font-size: 22px;
-  color: #C0392B;
+  color: #E66767;
   margin-bottom: 16px;
   display: flex;
   align-items: center;
@@ -417,7 +418,9 @@ export const FooterLogo = styled.div`
   gap: 6px;
 
   img {
-    height: 30px;
+    width: 125px;
+    height: 57.5px;
+
     width: auto;
   }
 `
@@ -433,7 +436,7 @@ export const SocialBtn = styled.a`
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #C0392B;
+  background: #E66767;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -442,7 +445,7 @@ export const SocialBtn = styled.a`
   text-decoration: none;
 
   &:hover {
-    background: #a93226;
+    background: #E66767;
   }
 `
 

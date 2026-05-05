@@ -4,6 +4,7 @@ import styled from "styled-components";
 import logo from '../logo.png';
 import vector from '../Vector.png';
 import macarrao from '../macarrao.png';
+import { FaTwitter, FaInstagram, FaFacebook } from 'react-icons/fa';
 
 const PageWrapper = styled.div`
   background: #FDF0E8;
@@ -25,22 +26,24 @@ const Hero = styled.section`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 60vh;
+  height: 384px;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
   img {
-    height: 50px;
-    width: auto;
+
+    width: 125px;
+    height: 57.5px;
+
     margin-bottom: 100px;
   }
 
   h1 {
     font-family: 'Roboto', sans-serif;
     font-size: 36px;
-    color: #C0392B;
+    color: #E66767;
     line-height: 1.2;
     max-width: 560px;
     margin: 0 auto;
@@ -103,7 +106,7 @@ const Badges = styled.div`
 `;
 
 const Badge = styled.span`
-  background: ${props => props.alt ? '#E67E22' : '#C0392B'};
+  background: #E66767;
   color: #fff;
   font-size: 11px;
   font-weight: 500;
@@ -125,7 +128,7 @@ const CardHeader = styled.div`
 const CardName = styled.span`
   font-weight: 500;
   font-size: 16px;
-  color: #C0392B;
+  color: #E66767;
 `;
 
 const CardRating = styled.span`
@@ -138,7 +141,7 @@ const CardRating = styled.span`
 `;
 
 const Star = styled.span`
-  color: #E67E22;
+  color: #E66767;
   font-size: 16px;
 `;
 
@@ -151,7 +154,7 @@ const CardDesc = styled.p`
 
 const Button = styled.button`
   display: inline-block;
-  background: #C0392B;
+  background: #E66767;
   color: #fff;
   font-size: 13px;
   font-weight: 500;
@@ -162,7 +165,7 @@ const Button = styled.button`
   transition: background 0.2s;
 
   &:hover {
-    background: #a93226;
+    background: #E66767;
   }
 `;
 
@@ -177,7 +180,7 @@ const Footer = styled.footer`
 const FooterLogo = styled.div`
   font-family: 'Playfair Display', serif;
   font-size: 22px;
-  color: #C0392B;
+  color: #E66767;
   margin-bottom: 16px;
   display: flex;
   align-items: center;
@@ -185,8 +188,10 @@ const FooterLogo = styled.div`
   gap: 6px;
 
   img {
-    height: 30px;
-    width: auto;
+
+    width: 125px;
+    height: 57.5px;
+
   }
 `;
 
@@ -197,11 +202,13 @@ const Social = styled.div`
   margin-bottom: 20px;
 `;
 
+
+
 const SocialBtn = styled.a`
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #C0392B;
+  background: #E66767;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -210,15 +217,10 @@ const SocialBtn = styled.a`
   text-decoration: none;
 
   &:hover {
-    background: #a93226;
+    background: #E66767;
   }
 `;
 
-const SocialIcon = styled.span`
-  color: #fff;
-  font-size: 13px;
-  font-weight: 500;
-`;
 
 const FooterDisclaimer = styled.p`
   font-size: 11.5px;
@@ -330,13 +332,13 @@ function Home() {
         </FooterLogo>
         <Social>
           <SocialBtn href="#">
-            <SocialIcon>ig</SocialIcon>
+            <FaInstagram color="#FFEBD9" size={18} />
           </SocialBtn>
           <SocialBtn href="#">
-            <SocialIcon>f</SocialIcon>
+            <FaFacebook color="#FFEBD9" size={18} />
           </SocialBtn>
           <SocialBtn href="#">
-            <SocialIcon>tw</SocialIcon>
+            <FaTwitter color="#FFEBD9" size={18} />
           </SocialBtn>
         </Social>
         <FooterDisclaimer>

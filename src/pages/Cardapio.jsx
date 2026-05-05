@@ -26,11 +26,10 @@ import {
   FooterLogo,
   Social,
   SocialBtn,
-  SocialIcon,
   FooterDisclaimer,
   GlobalStyle,
 } from '../styles/styles';
-
+import { FaTwitter, FaInstagram, FaFacebook } from 'react-icons/fa';
 // Dados de exemplo para pizzas
 const pizzas = [
   {
@@ -198,13 +197,13 @@ function Cardapio() {
         </FooterLogo>
         <Social>
           <SocialBtn href="#">
-            <SocialIcon>ig</SocialIcon>
+            <FaInstagram color="#fff" size={18} />
           </SocialBtn>
           <SocialBtn href="#">
-            <SocialIcon>f</SocialIcon>
+            <FaFacebook color="#fff" size={18} />
           </SocialBtn>
           <SocialBtn href="#">
-            <SocialIcon>tw</SocialIcon>
+            <FaTwitter color="#fff" size={18} />
           </SocialBtn>
         </Social>
         <FooterDisclaimer>
