@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from '../logo.png';
 import vector from '../Vector.png';
-import macarrao from '../macarrao.png';
 import { FaTwitter, FaInstagram, FaFacebook } from 'react-icons/fa';
 
 const PageWrapper = styled.div`
@@ -150,6 +149,10 @@ const CardDesc = styled.p`
   color: #E66767;
   line-height: 1.55;
   margin-bottom: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 `;
 
 const Button = styled.button`
@@ -230,66 +233,49 @@ const FooterDisclaimer = styled.p`
   line-height: 1.5;
 `;
 
-const restaurants = [
-  {
-    id: 1,
-    name: 'Hioki Sushi',
-    rating: 4.9,
-    category: 'Japonesa',
-    badge: 'Destaque da semana',
-    description: 'Peça já o melhor da culinária japonesa no conforto da sua casa! Sushis frescos, sashimis deliciosos e pratos quentes irresistíveis. Entrega rápida, embalagens cuidadosas e qualidade garantida. Experimente o Japão sem sair do lar com nosso delivery!',
-    emoji: '🍣',
-    gradient: 'linear-gradient(135deg, #1a1a2e 0%, #2d1b1b 100%)',
-  },
-  {
-    id: 2,
-    name: 'La Dolce Vita Trattoria',
-    rating: 4.6,
-    category: 'Italiana',
-    description: 'A La Dolce Vita Trattoria leva a autêntica cozinha italiana até você! Desfrute de massas caseiras, pizzas deliciosas e risotos incríveis, tudo no conforto do seu lar. Entrega rápida, pratos bem embalados e sabor inesquecível. Peça já!',
-    emoji: '🍝',
-    gradient: 'linear-gradient(135deg, #2c1810 0%, #4a2c1a 100%)',
-  },
-  {
-    id: 3,
-    name: 'La Dolce Vita Trattoria',
-    rating: 4.6,
-    category: 'Italiana',
-    description: 'A La Dolce Vita Trattoria leva a autêntica cozinha italiana até você! Desfrute de massas caseiras, pizzas deliciosas e risotos incríveis, tudo no conforto do seu lar. Entrega rápida, pratos bem embalados e sabor inesquecível. Peça já!',
-    emoji: '🍕',
-    gradient: 'linear-gradient(135deg, #2c1810 0%, #4a2c1a 100%)',
-  },
-  {
-    id: 4,
-    name: 'La Dolce Vita Trattoria',
-    rating: 4.6,
-    category: 'Italiana',
-    description: 'A La Dolce Vita Trattoria leva a autêntica cozinha italiana até você! Desfrute de massas caseiras, pizzas deliciosas e risotos incríveis, tudo no conforto do seu lar. Entrega rápida, pratos bem embalados e sabor inesquecível. Peça já!',
-    emoji: '🥩',
-    gradient: 'linear-gradient(135deg, #2c1810 0%, #4a2c1a 100%)',
-  },
-  {
-    id: 5,
-    name: 'La Dolce Vita Trattoria',
-    rating: 4.6,
-    category: 'Italiana',
-    description: 'A La Dolce Vita Trattoria leva a autêntica cozinha italiana até você! Desfrute de massas caseiras, pizzas deliciosas e risotos incríveis, tudo no conforto do seu lar. Entrega rápida, pratos bem embalados e sabor inesquecível. Peça já!',
-    emoji: '🍝',
-    gradient: 'linear-gradient(135deg, #2c1810 0%, #4a2c1a 100%)',
-  },
-  {
-    id: 6,
-    name: 'La Dolce Vita Trattoria',
-    rating: 4.6,
-    category: 'Italiana',
-    description: 'A La Dolce Vita Trattoria leva a autêntica cozinha italiana até você! Desfrute de massas caseiras, pizzas deliciosas e risotos incríveis, tudo no conforto do seu lar. Entrega rápida, pratos bem embalados e sabor inesquecível. Peça já!',
-    emoji: '🍜',
-    gradient: 'linear-gradient(135deg, #2c1810 0%, #4a2c1a 100%)',
-  },
-];
+const Loading = styled.div`
+  text-align: center;
+  color: #E66767;
+  margin-top: 52px;
+`;
+
+const ErrorMessage = styled.p`
+  text-align: center;
+  color: #b32929;
+  font-weight: 500;
+  margin-top: 24px;
+`;
 
 function Home() {
   const navigate = useNavigate();
+  const [restaurants, setRestaurants] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  function renderRestaurantes(lista) {
+    setRestaurants(Array.isArray(lista) ? lista : []);
+  }
+
+  const carregarRestaurantes = useCallback(async () => {
+    setLoading(true);
+    setErrorMessage('');
+    try {
+      const response = await fetch('https://api-ebac.vercel.app/api/efood/restaurantes');
+      if (!response.ok) {
+        throw new Error('Falha ao carregar restaurantes.');
+      }
+      const data = await response.json();
+      renderRestaurantes(data);
+    } catch (error) {
+      setErrorMessage(error.message || 'Erro ao carregar dados.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    carregarRestaurantes();
+  }, [carregarRestaurantes]);
 
   return (
     <PageWrapper>
@@ -298,28 +284,52 @@ function Home() {
         <h1>Viva experiências gastronômicas no conforto da sua casa</h1>
       </Hero>
 
-      <CardsGrid>
+      {loading && <Loading id="loading">Carregando...</Loading>}
+      {!!errorMessage && <ErrorMessage id="error-msg">{errorMessage}</ErrorMessage>}
+
+      <CardsGrid id="grid">
         {restaurants.map((restaurant) => (
           <Card key={restaurant.id}>
             <CardImg>
-              <CardImgPlaceholder src={macarrao} alt={restaurant.name} />
+              <CardImgPlaceholder
+                src={restaurant.capa}
+                alt={restaurant.titulo}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/placeholder.jpg';
+                }}
+                ref={(element) => {
+                  if (element) {
+                    element._data = restaurant;
+                  }
+                }}
+              />
               <Badges>
-                {restaurant.badge && (
-                  <Badge alt>{restaurant.badge}</Badge>
-                )}
-                <Badge>{restaurant.category}</Badge>
+                {restaurant.destacado && <Badge>Destaque da semana</Badge>}
+                {String(restaurant.tipo || '')
+                  .split(';')
+                  .map((tipo) => tipo.trim())
+                  .filter(Boolean)
+                  .map((tipo) => (
+                    <Badge key={`${restaurant.id}-${tipo}`}>{tipo}</Badge>
+                  ))}
               </Badges>
             </CardImg>
             <CardBody>
               <CardHeader>
-                <CardName>{restaurant.name}</CardName>
+                <CardName>{restaurant.titulo}</CardName>
                 <CardRating>
-                  {restaurant.rating} <Star>★</Star>
+                  {restaurant.avaliacao} <Star>★</Star>
                 </CardRating>
               </CardHeader>
-              <CardDesc>{restaurant.description}</CardDesc>
-              <Button onClick={() => navigate('/cardapio')}>
-                Saiba mais
+              <CardDesc>{restaurant.descricao}</CardDesc>
+              <Button
+                onClick={(event) => {
+                  event.currentTarget._data = restaurant;
+                  navigate('/cardapio', { state: { restaurant } });
+                }}
+              >
+                Ver Cardápio
               </Button>
             </CardBody>
           </Card>

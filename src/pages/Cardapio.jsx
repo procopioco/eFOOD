@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useMemo, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useCartStorage } from '../hooks/useCartStorage';
 import PizzaList from '../components/PizzaList';
 import PizzaModal from '../components/PizzaModal';
@@ -30,32 +30,10 @@ import {
   GlobalStyle,
 } from '../styles/styles';
 import { FaTwitter, FaInstagram, FaFacebook } from 'react-icons/fa';
-// Dados de exemplo para pizzas
-const pizzas = [
-  {
-    id: 1,
-    name: 'Margherita',
-    description: 'Molho de tomate, mussarela, manjericão fresco.',
-    price: 25.99,
-    image: pizzaImage,
-  },
-  {
-    id: 2,
-    name: 'Pepperoni',
-    description: 'Molho de tomate, mussarela, pepperoni.',
-    price: 29.99,
-    image: pizzaImage,
-  },
-  {
-    id: 3,
-    name: 'Quatro Queijos',
-    description: 'Molho de tomate, mussarela, gorgonzola, parmesão, provolone.',
-    price: 32.99,
-    image: pizzaImage,
-  },
-];
 
 function Cardapio() {
+  const location = useLocation();
+  const restaurant = location.state?.restaurant || null;
   const [cartItems, setCartItems] = useCartStorage();
   const [selectedPizza, setSelectedPizza] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,6 +42,17 @@ function Cardapio() {
   const [, setDeliveryData] = useState(null);
   const [orderSuccessOpen, setOrderSuccessOpen] = useState(false);
   const [completedOrder, setCompletedOrder] = useState(null);
+  const pizzas = useMemo(
+    () =>
+      (restaurant?.cardapio || []).map((item) => ({
+        id: item.id,
+        name: item.nome,
+        description: item.descricao,
+        price: item.preco,
+        image: item.foto,
+      })),
+    [restaurant]
+  );
 
   const handleAddToCart = (pizza) => {
     setCartItems((prev) => {
@@ -139,11 +128,11 @@ function Cardapio() {
         </Container>
       </Header>
       <Main>
-        <Banner image={pizzaImage}>
+        <Banner image={restaurant?.capa || pizzaImage}>
           <Container>
             <BannerText>
-              <Category>Italiana</Category>
-              <Title>La Dolce Vita Trattoria</Title>
+              <Category>{(restaurant?.tipo || 'Restaurante').split(';')[0]}</Category>
+              <Title>{restaurant?.titulo || 'Selecione um restaurante'}</Title>
             </BannerText>
           </Container>
         </Banner>
