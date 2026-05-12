@@ -18,32 +18,19 @@ const SidebarContainer = styled.aside`
   right: 0;
   top: 0;
   height: 100vh;
-  width: 320px;
+  width: 360px;
   background: #E66767;
   box-shadow: -2px 0 12px rgba(0, 0, 0, 0.15);
   z-index: 40;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   transform: translateX(${props => (props.$isOpen ? '0' : '100%')});
   transition: transform 0.3s ease-in-out;
-`;
-
-const SidebarHeader = styled.div`
-  padding: 24px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-
-  h2 {
-    color: #FFEBD9;
-    font-size: 20px;
-    font-weight: bold;
-    margin: 0;
-    font-family: 'DM Sans', sans-serif;
-  }
+  overflow-y: auto;
 `;
 
 const ItemsList = styled.div`
-  flex: 1;
-  overflow-y: auto;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -83,7 +70,6 @@ const EmptyMessage = styled.div`
 
 const CartItemCard = styled.div`
   background: #FDF3EC;
-  border-radius: 8px;
   padding: 16px;
   display: flex;
   gap: 16px;
@@ -100,9 +86,7 @@ const ItemImage = styled.img`
   width: 60px;
   height: 60px;
   object-fit: cover;
-  border-radius: 8px;
   flex-shrink: 0;
-  padding: 8px;
   background: #FFEBD9;
 `;
 
@@ -114,7 +98,7 @@ const ItemContent = styled.div`
 const ItemName = styled.h3`
   font-weight: bold;
   color: #E66767;
-  font-size: 14px;
+  font-size: 18px;
   line-height: 1.4;
   margin: 0 0 8px 0;
   font-family: 'DM Sans', sans-serif;
@@ -158,8 +142,8 @@ const RemoveButton = styled.button`
 `;
 
 const SidebarFooter = styled.div`
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding: 24px;
+  margin-top: 8px;
   background: #E66767;
   display: flex;
   flex-direction: column;
@@ -188,21 +172,18 @@ const TotalContainer = styled.div`
 
 const CheckoutButton = styled.button`
   width: 100%;
-  padding: 12px 16px;
-  border-radius: 8px;
+  height: 24px;
   font-weight: 600;
   font-size: 14px;
-  border: 2px solid ${props => (props.$disabled ? 'rgba(255, 255, 255, 0.3)' : '#fff')};
-  background: transparent;
-  color: ${props => (props.$disabled ? 'rgba(255, 255, 255, 0.3)' : '#fff')};
+  background: #FFEBD9;
+  color: #E66767;
+  border: none;
+  outline: none;
   cursor: ${props => (props.$disabled ? 'not-allowed' : 'pointer')};
   transition: all 0.2s ease;
   font-family: 'DM Sans', sans-serif;
+  opacity: ${props => (props.$disabled ? 0.4 : 1)};
 
-  &:hover:not(:disabled) {
-    background: #fff;
-    color: #E8564A;
-  }
 
   &:active:not(:disabled) {
     transform: scale(0.98);
@@ -223,9 +204,6 @@ export const CartSidebar = ({
       {isOpen && <SidebarOverlay onClick={onClose} />}
 
       <SidebarContainer $isOpen={isOpen}>
-        <SidebarHeader>
-          <h2>Carrinho</h2>
-        </SidebarHeader>
 
         <ItemsList>
           {items.length === 0 ? (

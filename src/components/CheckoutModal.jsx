@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { ArrowLeft } from 'lucide-react';
+
 
 const Overlay = styled.div`
   position: fixed;
@@ -16,7 +16,7 @@ const Modal = styled.div`
   right: 0;
   top: 0;
   height: 100vh;
-  width: 320px;
+  width: 360px;
   background: #E66767;
   box-shadow: -2px 0 12px rgba(0, 0, 0, 0.15);
   z-index: 60;
@@ -34,23 +34,9 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+  font-size:16px;
   margin-bottom: 24px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 235, 217, 0.25);
-`;
-
-const BackButton = styled.button`
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  color: #FFEBD9;
-
-  &:hover {
-    opacity: 0.7;
-  }
 `;
 
 const Title = styled.h2`
@@ -62,7 +48,6 @@ const Title = styled.h2`
 `;
 
 const FormContainer = styled.div`
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -85,12 +70,12 @@ const Label = styled.label`
 const Input = styled.input`
   padding: 12px;
   border: 1px solid rgba(44, 44, 44, 0.12);
-  border-radius: 8px;
   font-size: 14px;
   font-family: 'DM Sans', sans-serif;
   background: #FFEBD9;
   color: #2c2c2c;
   box-sizing: border-box;
+  width: 100%;
 
   &::placeholder {
     color: rgba(44, 44, 44, 0.42);
@@ -103,76 +88,60 @@ const Input = styled.input`
   }
 `;
 
-const RowGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+const InlineRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
-const TotalHint = styled.p`
-  margin: 0;
-  font-size: 14px;
-  color: #FFEBD9;
-  font-family: 'DM Sans', sans-serif;
-  opacity: 0.95;
-
-  strong {
-    font-weight: 700;
-  }
+/* Linha com 3 colunas para: número do cartão (flex maior) + CVV (fixo) */
+const CardNumberCvvRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: auto;
   padding-top: 16px;
 `;
 
 const SecondaryButton = styled.button`
   width: 100%;
-  padding: 12px 16px;
-  border: 2px solid rgba(255, 235, 217, 0.45);
+  height: 24px;
   background: transparent;
-  color: #FFEBD9;
-  border-radius: 8px;
+  border: none;
+  outline: none;
+  color: #E66767;
+  background-color: #FFEBD9;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
   font-family: 'DM Sans', sans-serif;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba(255, 235, 217, 0.12);
-  }
 `;
 
 const PrimaryButton = styled.button`
   width: 100%;
-  padding: 12px 16px;
-  background: rgba(255, 235, 217, 0.12);
-  color: #FFEBD9;
-  border: 2px solid #FFEBD9;
-  border-radius: 8px;
+  height: 24px;
+  background: transparent;
+  background-color: #FFEBD9;
+  border: none;
+  outline: none;
+  color: #E66767;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
   font-family: 'DM Sans', sans-serif;
-  transition: all 0.2s ease;
-
-  &:hover:not(:disabled) {
-    background: rgba(255, 235, 217, 0.22);
-  }
-
-  &:disabled {
-    border-color: rgba(255, 235, 217, 0.25);
-    color: rgba(255, 235, 217, 0.4);
-    background: transparent;
-    cursor: not-allowed;
-  }
 `;
 
 const initialAddress = {
+  recipient: '',
   address: '',
   number: '',
   complement: '',
@@ -230,6 +199,7 @@ const CheckoutModal = ({ isOpen, totalPrice, onClose, onCompletePurchase }) => {
   };
 
   const isAddressValid =
+    addressData.recipient &&
     addressData.address &&
     addressData.number &&
     addressData.city &&
@@ -263,28 +233,33 @@ const CheckoutModal = ({ isOpen, totalPrice, onClose, onCompletePurchase }) => {
     });
   };
 
-  const handleHeaderBack = () => {
-    if (step === 'payment') setStep('address');
-    else onClose();
-  };
-
   if (!isOpen) return null;
 
   return (
     <Overlay onClick={onClose}>
       <Modal onClick={(e) => e.stopPropagation()}>
         <Header>
-          <BackButton type="button" onClick={handleHeaderBack}>
-            <ArrowLeft size={20} />
-          </BackButton>
           <Title>
-            {step === 'address' ? 'Endereço de entrega' : 'Pagamento'}
+            {step === 'address'
+              ? 'Endereço de entrega'
+              : `Pagamento - Valor a pagar R$ ${typeof totalPrice === 'number' ? totalPrice.toFixed(2).replace('.', ',') : '0,00'}`}
           </Title>
         </Header>
 
         {step === 'address' && (
           <>
             <FormContainer>
+              <FormField>
+                <Label>Quem Irá Receber</Label>
+                <Input
+                  type="text"
+                  name="recipient"
+                  value={addressData.recipient}
+                  onChange={handleAddressChange}
+                  placeholder="Nome de quem vai receber"
+                />
+              </FormField>
+
               <FormField>
                 <Label>Rua</Label>
                 <Input
@@ -296,16 +271,28 @@ const CheckoutModal = ({ isOpen, totalPrice, onClose, onCompletePurchase }) => {
                 />
               </FormField>
 
-              <FormField>
-                <Label>Número</Label>
-                <Input
-                  type="text"
-                  name="number"
-                  value={addressData.number}
-                  onChange={handleAddressChange}
-                  placeholder="Número..."
-                />
-              </FormField>
+              <InlineRow>
+                <FormField>
+                  <Label>CEP</Label>
+                  <Input
+                    type="text"
+                    name="cep"
+                    value={addressData.cep}
+                    onChange={handleAddressChange}
+                    placeholder="00000-000"
+                  />
+                </FormField>
+                <FormField>
+                  <Label>Número</Label>
+                  <Input
+                    type="text"
+                    name="number"
+                    value={addressData.number}
+                    onChange={handleAddressChange}
+                    placeholder="Número..."
+                  />
+                </FormField>
+              </InlineRow>
 
               <FormField>
                 <Label>Complemento</Label>
@@ -328,19 +315,6 @@ const CheckoutModal = ({ isOpen, totalPrice, onClose, onCompletePurchase }) => {
                   placeholder="Cidade..."
                 />
               </FormField>
-
-              <FormField>
-                <Label>CEP</Label>
-                <Input
-                  type="text"
-                  name="cep"
-                  value={addressData.cep}
-                  onChange={handleAddressChange}
-                  placeholder="00000-000"
-                />
-              </FormField>
-
-              <div style={{ marginTop: 'auto', minHeight: '20px' }} />
             </FormContainer>
 
             <ButtonContainer>
@@ -361,29 +335,7 @@ const CheckoutModal = ({ isOpen, totalPrice, onClose, onCompletePurchase }) => {
         {step === 'payment' && (
           <>
             <FormContainer>
-              <TotalHint>
-                Total do pedido:{' '}
-                <strong>
-                  R${' '}
-                  {typeof totalPrice === 'number'
-                    ? totalPrice.toFixed(2).replace('.', ',')
-                    : '0,00'}
-                </strong>
-              </TotalHint>
-
-              <FormField>
-                <Label>Número do cartão</Label>
-                <Input
-                  type="text"
-                  name="cardNumber"
-                  placeholder="0000 0000 0000 0000"
-                  value={paymentData.cardNumber}
-                  onChange={handlePaymentChange}
-                  maxLength={19}
-                  inputMode="numeric"
-                />
-              </FormField>
-
+              {/* 1. Nome no cartão — primeiro */}
               <FormField>
                 <Label>Nome no cartão</Label>
                 <Input
@@ -395,7 +347,36 @@ const CheckoutModal = ({ isOpen, totalPrice, onClose, onCompletePurchase }) => {
                 />
               </FormField>
 
-              <RowGroup>
+              {/* 2. Número do cartão + CVV lado a lado, sem vazar */}
+              <CardNumberCvvRow>
+                <FormField>
+                  <Label>Número do cartão</Label>
+                  <Input
+                    type="text"
+                    name="cardNumber"
+                    placeholder="0000 0000 0000 0000"
+                    value={paymentData.cardNumber}
+                    onChange={handlePaymentChange}
+                    maxLength={19}
+                    inputMode="numeric"
+                  />
+                </FormField>
+                <FormField>
+                  <Label>CVV</Label>
+                  <Input
+                    type="text"
+                    name="cvv"
+                    placeholder="000"
+                    value={paymentData.cvv}
+                    onChange={handlePaymentChange}
+                    maxLength={3}
+                    inputMode="numeric"
+                  />
+                </FormField>
+              </CardNumberCvvRow>
+
+              {/* 3. Mês + Ano lado a lado */}
+              <InlineRow>
                 <FormField>
                   <Label>Mês</Label>
                   <Input
@@ -420,21 +401,7 @@ const CheckoutModal = ({ isOpen, totalPrice, onClose, onCompletePurchase }) => {
                     inputMode="numeric"
                   />
                 </FormField>
-                <FormField>
-                  <Label>CVV</Label>
-                  <Input
-                    type="text"
-                    name="cvv"
-                    placeholder="000"
-                    value={paymentData.cvv}
-                    onChange={handlePaymentChange}
-                    maxLength={3}
-                    inputMode="numeric"
-                  />
-                </FormField>
-              </RowGroup>
-
-              <div style={{ marginTop: 'auto', minHeight: '12px' }} />
+              </InlineRow>
             </FormContainer>
 
             <ButtonContainer>
