@@ -157,7 +157,7 @@ const initialPayment = {
   cvv: '',
 };
 
-const CheckoutModal = ({ isOpen, totalPrice, onClose, onCompletePurchase }) => {
+const CheckoutModal = ({ isOpen, totalPrice, onClose, onCompletePurchase, isSubmitting }) => {
   const [step, setStep] = useState('address');
   const [addressData, setAddressData] = useState(initialAddress);
   const [paymentData, setPaymentData] = useState(initialPayment);
@@ -226,10 +226,9 @@ const CheckoutModal = ({ isOpen, totalPrice, onClose, onCompletePurchase }) => {
       alert('Preencha os dados do cartão corretamente');
       return;
     }
-    const { cvv: _cvv, ...paymentWithoutCvv } = paymentData;
     onCompletePurchase({
       delivery: addressData,
-      payment: paymentWithoutCvv,
+      payment: paymentData,
     });
   };
 
@@ -410,10 +409,10 @@ const CheckoutModal = ({ isOpen, totalPrice, onClose, onCompletePurchase }) => {
               </SecondaryButton>
               <PrimaryButton
                 type="button"
-                disabled={!isPaymentValid}
+                disabled={!isPaymentValid || isSubmitting}
                 onClick={handleConfirmPurchase}
               >
-                Confirmar compra
+                {isSubmitting ? 'Processando…' : 'Confirmar compra'}
               </PrimaryButton>
             </ButtonContainer>
           </>

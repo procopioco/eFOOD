@@ -54,6 +54,36 @@ const Message = styled.p`
   opacity: 0.95;
 `;
 
+const SummaryBox = styled.div`
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const SummaryRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const SummaryLabel = styled.span`
+  color: #FFEBD9;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.85;
+  font-family: 'DM Sans', sans-serif;
+`;
+
+const SummaryValue = styled.span`
+  color: #FFEBD9;
+  font-size: 14px;
+  line-height: 1.45;
+  font-family: 'DM Sans', sans-serif;
+`;
+
 const Button = styled.button`
   width: 100%;
   height: 40px;
@@ -75,7 +105,40 @@ const Button = styled.button`
   }
 `;
 
-const OrderConfirmation = ({ isOpen, onClose, orderId }) => {
+function formatMoney(value) {
+  if (value == null || Number.isNaN(Number(value))) return null;
+  return `R$ ${Number(value).toFixed(2).replace('.', ',')}`;
+}
+
+function resolveOrderId(data) {
+  if (!data || typeof data !== 'object') return null;
+  return (
+    data.orderId ??
+    data.order_id ??
+    data.id ??
+    data.pedidoId ??
+    (data.order && (data.order.id ?? data.order.orderId)) ??
+    null
+  );
+}
+
+function OrderConfirmation({ isOpen, onClose, orderData }) {
+  const orderId = resolveOrderId(orderData);
+  const receiver =
+    orderData?.delivery?.receiver ??
+    orderData?.receiver ??
+    orderData?.nomeRecebedor ??
+    null;
+  const addr = orderData?.delivery?.address ?? orderData?.address ?? null;
+  const addressLine =
+    addr &&
+    [addr.description, addr.number, addr.complement, addr.city, addr.zipCode]
+      .filter(Boolean)
+      .join(', ');
+  const totalFormatted = formatMoney(
+    orderData?.total ?? orderData?.totalPrice ?? orderData?.valor
+  );
+
   return (
     <>
       {isOpen && <ModalOverlay onClick={onClose} />}
@@ -83,11 +146,34 @@ const OrderConfirmation = ({ isOpen, onClose, orderId }) => {
       <ModalContainer $isOpen={isOpen}>
         <Header>
           <HeaderTitle>
-            Pedido realizado{orderId ? ` — ${orderId}` : ''}
+            Pedido realizado{orderId != null && orderId !== '' ? ` — ${orderId}` : ''}
           </HeaderTitle>
         </Header>
 
         <SuccessContent>
+          {(receiver || addressLine || totalFormatted) && (
+            <SummaryBox>
+              {receiver && (
+                <SummaryRow>
+                  <SummaryLabel>Recebedor</SummaryLabel>
+                  <SummaryValue>{receiver}</SummaryValue>
+                </SummaryRow>
+              )}
+              {addressLine && (
+                <SummaryRow>
+                  <SummaryLabel>Entrega</SummaryLabel>
+                  <SummaryValue>{addressLine}</SummaryValue>
+                </SummaryRow>
+              )}
+              {totalFormatted && (
+                <SummaryRow>
+                  <SummaryLabel>Total</SummaryLabel>
+                  <SummaryValue>{totalFormatted}</SummaryValue>
+                </SummaryRow>
+              )}
+            </SummaryBox>
+          )}
+
           <Message>
             Estamos felizes em informar que seu pedido já está em processo de preparação e, em breve, será entregue no endereço fornecido.
           </Message>
@@ -101,13 +187,13 @@ const OrderConfirmation = ({ isOpen, onClose, orderId }) => {
             Esperamos que desfrute de uma deliciosa e agradável experiência gastronômica. Bom apetite!
           </Message>
 
-          <Button onClick={onClose}>
+          <Button type="button" onClick={onClose}>
             Concluir
           </Button>
         </SuccessContent>
       </ModalContainer>
     </>
   );
-};
+}
 
 export default OrderConfirmation;

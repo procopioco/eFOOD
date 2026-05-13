@@ -39,9 +39,11 @@ function Cardapio() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [, setDeliveryData] = useState(null);
+  const [checkoutSubmitting, setCheckoutSubmitting] = useState(false);
   const [orderSuccessOpen, setOrderSuccessOpen] = useState(false);
   const [completedOrder, setCompletedOrder] = useState(null);
+
+  const CHECKOUT_URL = 'https://api-ebac.vercel.app/api/efood/checkout';
   const pizzas = useMemo(
     () =>
       (restaurant?.cardapio || []).map((item) => ({
@@ -76,24 +78,93 @@ function Cardapio() {
     setCheckoutOpen(true);
   };
 
-  const handleCompletePurchase = ({ delivery }) => {
-    setDeliveryData(delivery);
-    const total = cartItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
-    setCompletedOrder({
-      total,
-      address: {
-        street: delivery.address,
-        number: delivery.number,
-        city: delivery.city,
-        zipCode: delivery.cep,
+  const handleCompletePurchase = async ({ delivery, payment }) => {
+    const products = cartItems.map((item) => ({
+      id: item.id,
+      price: item.price * item.quantity,
+    }));
+
+    const cardNumberDigits = payment.cardNumber.replace(/\s/g, '');
+    const expiryYearFull = 2000 + parseInt(payment.expiryYear, 10);
+
+    const body = {
+      products,
+      delivery: {
+        receiver: delivery.recipient,
+        address: {
+          description: delivery.address,
+          city: delivery.city,
+          zipCode: delivery.cep,
+          number: Number(String(delivery.number).replace(/\D/g, '')) || delivery.number,
+          complement: delivery.complement || '',
+        },
       },
-    });
-    setCartItems([]);
-    setCheckoutOpen(false);
-    setOrderSuccessOpen(true);
+      payment: {
+        card: {
+          name: payment.cardName.trim(),
+          number: cardNumberDigits,
+          code: Number(payment.cvv),
+          expires: {
+            month: parseInt(payment.expiryMonth, 10),
+            year: expiryYearFull,
+          },
+        },
+      },
+    };
+
+    setCheckoutSubmitting(true);
+    try {
+      const response = await fetch(CHECKOUT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      const rawText = await response.text();
+      let data = null;
+      try {
+        data = rawText ? JSON.parse(rawText) : null;
+      } catch {
+        data = { message: rawText };
+      }
+
+      if (!response.ok) {
+        const msg =
+          (data && (data.message || data.error)) ||
+          `Não foi possível concluir o pedido (${response.status}).`;
+        window.alert(typeof msg === 'string' ? msg : 'Erro ao finalizar o pedido.');
+        return;
+      }
+
+      const total = cartItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+
+      setCompletedOrder({
+        ...data,
+        total: data?.total ?? data?.totalPrice ?? total,
+        delivery: data?.delivery ?? {
+          receiver: delivery.recipient,
+          address: {
+            description: delivery.address,
+            city: delivery.city,
+            zipCode: delivery.cep,
+            number: delivery.number,
+            complement: delivery.complement || '',
+          },
+        },
+      });
+      setCartItems([]);
+      setCheckoutOpen(false);
+      setOrderSuccessOpen(true);
+    } catch {
+      window.alert(
+        'Não foi possível conectar ao servidor. Verifique sua internet e tente novamente.'
+      );
+    } finally {
+      setCheckoutSubmitting(false);
+    }
   };
 
   const openCart = () => setCartOpen(true);
@@ -169,6 +240,7 @@ function Cardapio() {
         )}
         onClose={() => setCheckoutOpen(false)}
         onCompletePurchase={handleCompletePurchase}
+        isSubmitting={checkoutSubmitting}
       />
 
       <OrderConfirmation
